@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>App</title>
+  <link rel="stylesheet" href="/stylesheets/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <h1 style="text-align: center;">Welcome</h1>
+  <br>
+  <br>
+
+  <div class="col-md-8" style="position: relative; padding-left: 35%;">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Admin Login</h3>
+      </div>
+      <form method="post" action="/admin/verify">
+        <div class="card-body">
+          <div class="form-group">
+            <label for="exampleInputID">UserName</label>
+            <input type="text" class="form-control" id="name" name="username" placeholder="enter username">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputName">Password</label>
+            <input type="password" class="form-control" id="pass" name="password" placeholder="enter password">
+          </div>
+          <div class="form-group">
+            <a href="/admin/forgot" class="link-primary">forgot password ?</a>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary" name="submit">Log in</button>
+          </div>
+        </div>
+      </form>
+      <br>
+      <button type="button" class="btn btn-primary" name="register"><a href="/"
+        style="color: azure;"> Login as General User</a></button>
+      <br>
+    </div>
+  </div>
+  <!-- /.card -->
+
+  <!-- general form elements -->
+
+  <div class="form-group">
+  </div>
+  </form>
+  <%- include("../partials/footer.ejs") %>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Management Console</title>
+
+  <!-- Google Font: Source Sans Pro -->
+
+  <link rel="stylesheet" href="/stylesheets/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/stylesheets/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/stylesheets/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="/stylesheets/buttons.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <div class="sidebar">
+        <div class="info">
+          <h5 style="color: aliceblue; text-align: center;">
+            <%=name%>
+          </h5>
+        </div>
+      </div>
+
+
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li class="nav-item">
+            <a href="/admin" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Login
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="/admin/emptable" class="nav-link active">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Employee Details
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin/deleteddata" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Deleted Employee
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin/approvaltable" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Employee Approval
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin/logs" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Logs
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker/admin" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Docker
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- /.sidebar -->
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>List of employees</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/admin/emptable">Home</a></li>
+                <li class="breadcrumb-item active"><a href="/admin/logout">LogOut</a></li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content" style="padding-left: 25%; padding-right: 10%;">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Employee Table</h3>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                </div>
+
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+                          aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending"
+                          name="name">Name
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+                          aria-label="Platform(s): activate to sort column ascending" name="email">Email
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+                          aria-label="Engine version: activate to sort column ascending" name="dep">Department
+                        </th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+                          aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending"
+                          name="con">
+                          Contact
+                        </th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+                          aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending"
+                          name="city">City
+                        </th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+                        aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending"
+                        name="privileges">Privileges
+                      </th>
+                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+                          aria-label="Engine version: activate to sort column ascending">Options</th>
+                      </tr>
+                      </tfoot>
+                    <tbody>
+                      <% for (let i=0; i<data.length;i++){ %>
+                        <tr>
+                          <td>
+                            <%=data[i].name%>
+                          </td>
+                          <td>
+                            <%=data[i].email%>
+                          </td>
+                          <td>
+                            <%=data[i].department%>
+                          </td>
+                          <td>
+                            <%=data[i].contact%>
+                          </td>
+                          <td>
+                            <%=data[i].city%>
+                          </td>
+                          <td>
+                            <% if (data[i].username == log[i].username){ %>
+                            <%=log[i].role%>
+                            <%}%>
+                          </td>
+                          <td><button type="button" class="btn btn-primary" name="register"><a
+                                href="/control/edit/<%=data[i].username%>" style="color: azure;">Edit</a></button> &nbsp; &nbsp;
+                            <button type="button" class="btn btn-primary" name="register"><a
+                                href="/control/delete/<%=data[i].username%>" style="color: azure;">Delete</a></button>
+                          </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Contact</th>
+                        <th>City</th>
+                        <th>Privileges</th>
+                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1"
+                          aria-label="Engine version: activate to sort column ascending">Options</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  <br>
+                  <br>
+                  <a href="/admin/deleteddata">Trash Data</a>
+                  </form>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
+    </div>
+  </div>
+  <!-- /.content-wrapper -->
+  <%- include("../partials/footer.ejs") %>
+
+
+</body>
+
+</html>

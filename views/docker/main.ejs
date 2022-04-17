@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docker Management</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/stylesheets/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <div class="sidebar">
+        <div class="info">
+          <h5 style="color: aliceblue; text-align: center;">
+            <%=name%>
+          </h5>
+        </div>
+      </div>
+
+
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a href="/" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Login
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user/table" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Employee Details 
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>         
+          <li class="nav-item">
+            <a href="/user/register" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Register
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="/docker" class="nav-link active">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Docker
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" >
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/user/table">Home</a></li>
+                <li class="breadcrumb-item active"><a href="/logout">LogOut</a></li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <section class="content" style="padding-left: 30%;">
+        <div class="container-fluid">
+          <div class="row">
+            <!-- left column -->
+            <div class="col-md-10">
+              <!-- general form elements -->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Docker</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+
+                <form action="/doc-exec" method="post">
+
+
+                  <div class="card-body">
+                    <table id="example2" class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th style="color: red;">Options</th>
+                          <th style="font-weight: bolder; color: red;">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><button type="button" class="btn btn-primary" name="container" style="width: 250px;"><a
+                                href="/docker/container" style="color: azure;">Container</a></button> &nbsp; &nbsp;
+                          <td> <label for="exampleInputID">To Manage the Containers</label></td>
+                        </tr>
+                        <tr>
+                          <td><button type="button" class="btn btn-primary" name="image" style="width: 250px;"><a
+                                href="/docker/image" style="color: azure;">Image</a></button> &nbsp; &nbsp;
+                          <td> <label for="exampleInputID">To Manage the images</label></td>
+                        </tr>
+                        <tr>
+                          <td><button type="button" class="btn btn-primary" name="network" style="width: 250px;"><a
+                                href="/docker/network" style="color: azure;">Network</a></button> &nbsp; &nbsp;
+                          <td> <label for="exampleInputID">To Manage the Networks</label></td>
+                        </tr>
+                        <tr>
+                          <td><button type="button" class="btn btn-primary" name="network" style="width: 250px;"><a
+                                href="/dockerfile" style="color: azure;">Docker File</a></button> &nbsp; &nbsp;
+                          <td> <label for="exampleInputID">To Manage Docker files</label></td>
+                        </tr>
+                        <td><button type="button" class="btn btn-primary" name="network" style="width: 250px;"><a
+                          href="/docker/deletion" style="color: azure;">Delete Resource</a></button> &nbsp; &nbsp;
+                    <td> <label for="exampleInputID">To Remove the resources permanently either running or stopped</label></td>
+                      </tbody>
+                    </table>
+
+
+                </form>
+              </div>
+              <!-- /.card -->
+
+              <!-- general form elements -->
+
+              <div class="form-group">
+              </div>
+              </form>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!--/.col (right) -->
+      </section>
+    </div>
+    <!-- /.row -->
+  </div><!-- /.container-fluid -->
+  <!-- /.content -->
+  <!-- /.content-wrapper -->
+  <%- include("../partials/footer.ejs") %>
+</body>
+
+</html>

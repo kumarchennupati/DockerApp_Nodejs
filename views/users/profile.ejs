@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Management Console</title>
+  <link rel="stylesheet" href="/stylesheets/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <div class="sidebar">
+        <div class="info">
+          <h5 style="color: aliceblue; text-align: center;">
+            <%=name%>
+          </h5>
+        </div>
+      </div>
+
+
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li class="nav-item">
+            <a href="/login" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Login
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="/table" class="nav-link active">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Employee Details
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/register" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Register Employee
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Docker
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- /.sidebar -->
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active"><a href="/logout">LogOut</a></li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+        <div class="container-fluid" style="padding-left: 25%; padding-right: 10%;">
+          <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+              <!-- general form elements -->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Employee Details</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+
+                <form action="/control/edit" method="post">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label for="exampleInputName">Name</label>
+                      <input type="text" class="form-control" id="name" name="name" value="<%=info.name%>">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail">Email</label>
+                      <input type="text" class="form-control" id="mail" name="email" value="<%=info.email%>">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputDOB">Contact</label>
+                      <input type="text" class="form-control" id="con" name="contact" value="<%=info.contact%>">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputSalary">City</label>
+                      <input type="text" class="form-control" id="city" name="city" value="<%=info.city%>">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputDOB">Department</label>
+
+
+                      <select id="department" name="department">
+                        <% for(let i=0;i<department.length;i++){%>
+                          <option value="<%=department[i].name%>" <% if(info.department ==department[i].name){%>
+                            selected="selected"
+                            <%}%>><%=department[i].name%>
+                          </option>
+                          <%}%>
+                      </select>
+
+                    </div>
+
+                      <input type="hidden" class="form-control" id="_id" name="_id" value="<%=info._id%>">
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" name="submit">ADD</button>
+                    </div>
+                  </div>
+
+
+                </form>
+              </div>
+              <!-- /.card -->
+
+              <!-- general form elements -->
+
+              <div class="form-group">
+              </div>
+              </form>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!--/.col (right) -->
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.content-wrapper -->
+  <%- include("../partials/footer.ejs") %>
+
+</body>
+
+</html>

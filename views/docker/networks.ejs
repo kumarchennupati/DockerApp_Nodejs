@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docker Management</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/stylesheets/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+  <link rel="stylesheet" href="/stylesheets/terminal.css">
+  <script src="/javascripts/docker.js"></script>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <div class="sidebar">
+        <div class="info">
+          <h5 style="color: aliceblue; text-align: center;">
+            <%=name%>
+          </h5>
+        </div>
+      </div>
+
+
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a href="<%=homePath%>" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Docker
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker/container" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Container
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker/image" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Image
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="/docker/network" class="nav-link active">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Network
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker/deletion" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Delete Resource
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="<%=homePath%>">DockerMainPage</a></li>
+                <li class="breadcrumb-item active"><a href="/logout">LogOut</a></li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content" style="padding-left: 25%;">
+        <div class="container-fluid">
+          <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+              <!-- general form elements -->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Docker</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+
+                <form>
+
+                  <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th style="color: red;">Options</th>
+                          <th style="font-weight: bolder; color: red;">Description</th>
+                        </tr>
+                        </tfoot>
+                      <tbody>
+                        <tr>
+                          <td><button type="button" class="btn btn-primary" name="listNet" style="width: 200px;"
+                              onclick="networkList( '<%=urlPath%>','netlist' );">Availabel Networks</button>
+                          <td> <label for="exampleInputID">To List the Available Networks</label></td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label style="width: 15%;">Network Name:</label>
+                            <input style="width: 31%;" type="text" id="netname" name="netname"
+                              placeholder="Name given to new network created  ...."> &emsp; &emsp; &emsp;
+                            <label style="width: 15%;">Driver Name:</label>
+                            <input style="width: 31%;" type="text" id="driver" name="driver"
+                              placeholder="Name of the network driver to be attached ...."> <br>
+                            <label style="width: 15%;">Subnet (optional):</label>
+                            <input style="width: 31%;" type="text" id="subnet" name="subnet"
+                              placeholder="192.168.0.0/16"> &emsp; &emsp; &emsp;
+                            <label style="width: 15%;">Gateway (optional):</label>
+                            <input style="width: 31%;" type="text" id="gateway" name="gateway"
+                              placeholder="192.168.0.1">
+                            <button type="button" class="btn btn-primary" name="netCreate" style="width: 200px;"
+                              onclick="createNetwork( '<%=urlPath%>','netcreate');">Create Network</button>
+                          </td>
+                          <td> <label for="exampleInputID">To Create a new Network</label>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label style="width: 15%;">Network Name:</label>
+                            <input style="width: 31%;" type="text" id="networkname" name="networkname"
+                              placeholder="Name of the Network to attach...."> &emsp; &emsp; &emsp;
+                            <label style="width: 15%;">Container Name:</label>
+                            <input style="width: 31%;" type="text" id="contname" name="contname"
+                              placeholder="Name of the Container to attach network ...."> <br>
+                            <label style="width: 15%;">IP (optional):</label>
+                            <input style="width: 31%;" type="text" id="specificip" name="specificip"
+                              placeholder="Specify IP to Container manually ...."> &emsp; &emsp; &emsp; <br>
+                            <button type="button" class="btn btn-primary" name="launch" style="width: 200px;"
+                              onclick="connectNetwork( '<%=urlPath%>','netconnect');">Connect Network</button>
+                          </td>
+                          <td> <label for="exampleInputID">To Connect Network to a Container</label></td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label style="width: 15%;">Network Name:</label>
+                            <input style="width: 31%;" type="text" id="detnetname" name="detnetname"
+                              placeholder="Name of the Network to be detached  ...."> &emsp; &emsp; &emsp;
+                            <label style="width: 15%;">Container Name:</label>
+                            <input style="width: 31%;" type="text" id="detcontname" name="detcontname"
+                              placeholder="ContainerName to detach from Network"> <br>
+                            <button type="button" class="btn btn-primary" name="netCreate" style="width: 300px;"
+                              onclick="detachNetwork( '<%=urlPath%>','netdetach');">Network Detach</button>
+                          </td>
+                          <td> <label for="exampleInputID">To Detach a Network from Container</label>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="form-group" style="margin-bottom: 0%;">
+
+                      <div id="container">
+
+                        <div id="bar">
+                          <div id="red">
+                          </div>
+                          <div id="yellow">
+                          </div>
+                          <div id="green">
+                          </div>
+
+
+                        </div>
+                        <div id="screen">
+                          <div id="userInput">
+                            <input type="text" value="[<%=name%>@DockerClient:~]$" id="prompt" size="28"
+                              readonly="readonly">
+                            <div id="txtBox">
+                              <%=cmd%>
+                            </div>
+
+                          </div>
+                          <pre>
+                          <div id="injected"> <%=output%> </div>
+                          </pre>
+                        </div>
+                      </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!--/.col (right) -->
+
+      </section>
+      <!-- /.content -->
+    </div>
+  </div> <!-- /.content-wrapper -->
+  <%- include("../partials/footer.ejs") %>
+
+
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docker Management</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="/stylesheets/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <div class="sidebar">
+        <div class="info">
+          <h5 style="color: aliceblue; text-align: center;">
+            <%=name%>
+          </h5>
+        </div>
+      </div>
+
+
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            <a href="<%=homePath%>" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Docker
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="/docker/container" class="nav-link active">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Container
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker/image" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Image
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker/network" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Network
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker/deletion" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Delete Resource
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" >
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="<%=homePath%>">DockerMainPage</a></li>
+                <li class="breadcrumb-item active"><a href="/logout">LogOut</a></li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <div class="container-fluid" style="padding-left: 25%; padding-right: 10%;">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Container Details</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+
+              <form method="post" action="/docker/runcont" >
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputName">Enter Container Name (Optional)</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputName">Enter Image Name/ID</label>
+                    <input type="text" class="form-control" id="imagename" name="imagename" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail">Enter Image Tag (optional)</label>
+                    <input type="text" class="form-control" id="tag" name="tag">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInput">Do you want to launch container in detached mode</label><br>
+                    <input type="radio" id="yes"   name="detached" value="yes">
+                    <label for="yes">Yes</label>&emsp; &emsp; &emsp; 
+                    <input type="radio" id="no"  name="detached" value="no">
+                    <label for="no">No</label><br>
+                  </div>
+                  <div class="form-group">
+                    <input type="checkbox" id="vol1" name="vol1" value="vol1">&emsp;
+                    <button type="button" class="btn btn-primary" id="vol" name="vol" style="width: 200px;">Mount Volume</button>
+                  </div>
+                  <div class="form-group" id="volume" style="display: none;">
+                    <label for="exampleInputSalary">Source Volume Path</label>
+                    <input type="text" class="form-control" id="srcvol" name="srcvol">
+                    <label for="exampleInputSalary">Destination Volume Path</label>
+                    <input type="text" class="form-control" id="destvol" name="destvol">
+                  </div>
+                  <div class="form-group">
+                    <input type="checkbox" id="expose1" name="expose1" value="expose1">&emsp;
+                    <button type="button" class="btn btn-primary" id="expose" name="expose" style="width: 200px;">Expose Port</button>
+                  </div >
+                  <div class="form-group" id="port" style="display: none;">
+                    <label for="exampleInputSalary">Host Ports (can be single or range) (Optional)</label>
+                    <input type="text" class="form-control" id="hostport" name="hostport">
+                    <label for="exampleInputSalary">Container Ports to expose (can be single or range) (required) </label>
+                    <input type="text" class="form-control" id="contport" name="contport">
+                  </div>
+                  <div class="form-group">
+                    <input type="checkbox" id="net1" name="net1" value="net1">&emsp;
+                    <button type="button" class="btn btn-primary" id="net" name="net" style="width: 200px;">Specify Network Type</button>
+                  </div>
+                  <div class="form-group" id="network" style="display: none;">
+                    <label for="exampleInputSalary">Enter Network Name/ID</label>
+                    <input type="text" class="form-control" id="networktype" name="networktype">
+                  </div>
+                  <br>
+                  <br>
+                  <center>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary" name="submit">Launch</button>
+                  </div>
+                </center>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+
+            <!-- general form elements -->
+
+            <div class="form-group">
+            </div>
+            </form>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!--/.col (right) -->
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.content-wrapper -->
+  <%- include("../partials/footer.ejs") %>
+
+<script>
+  $("#vol").click(function() {
+    $("#volume").toggle();
+    if($("#vol1")[0].checked == false){
+      $("#vol1")[0].checked =true;
+    }
+    else if ($("#vol1")[0].checked == true){
+      $("#vol1")[0].checked =false;
+    }
+});
+
+$("#vol1").click(function() {
+    $("#volume").toggle();
+});
+
+$("#expose").click(function() {
+    $("#port").toggle();
+    if($("#expose1")[0].checked == false){
+      $("#expose1")[0].checked =true;
+    }
+    else if ($("#expose1")[0].checked == true){
+      $("#expose1")[0].checked =false;
+    }
+});
+
+$("#expose1").click(function() {
+    $("#port").toggle();
+});
+
+$("#net").click(function() {
+    $("#network").toggle();
+    if($("#net1")[0].checked == false){
+      $("#net1")[0].checked =true;
+    }
+    else if ($("#net1")[0].checked == true){
+      $("#net1")[0].checked =false;
+    }
+});
+
+$("#net1").click(function() {
+    $("#network").toggle();
+});
+
+</script>
+</body>
+
+</html>

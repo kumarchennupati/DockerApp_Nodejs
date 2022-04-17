@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>App</title>
+
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/stylesheets/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <section class="content-header">
+    <form>
+      <div style="padding-left:85%;">
+        <button type="button" class="btn btn-primary" name="register"><a href="/admin"
+            style="color: azure;">Login</a></button>
+      </div>
+    </form>
+
+  </section>
+  <div class="content-wrapper">
+
+    <!-- Main content -->
+    <section class="content" style="position: relative; padding-left: 35%;">
+      <div class=" container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Account Details</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form method="post" action="/admin/forgot">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputID">UserName</label>
+                    <input type="text" class="form-control" id="name" name="username" placeholder="enter username">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputID">Enter Code word</label>
+                    <input type="password" class="form-control" id="Nname" name="securityAnswer" placeholder="enter code word">
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="form-control" id="submit">submit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- /.card -->
+
+          <!-- general form elements -->
+
+          <div class="form-group">
+          </div>
+          </form>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+  </div>
+  <!-- /.content-wrapper -->
+  <%- include("../partials/footer.ejs") %>
+
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Management Console</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/stylesheets/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <div class="sidebar">
+        <div class="info">
+          <h5 style="color: aliceblue; text-align: center;">
+            User
+          </h5>
+        </div>
+      </div>
+
+
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li class="nav-item">
+            <a href="/" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Login
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="/user/table" class="nav-link">
+              <i class="nav-icon fas fa-cxtachometer-alt"></i>
+              <p>
+                Employee Details
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="/user/register" class="nav-link active">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Register Employee
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/docker" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Docker
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header" style="padding-left: 10%;">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/user/table">Home</a></li>
+                <li class="breadcrumb-item active"><a href="/logout">LogOut</a></li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+
+      <div class="container-fluid" style="padding-left: 25%; padding-right: 10%;">
+          <div class=" row">
+        <!-- left column -->
+        <div class="col-md-6">
+          <!-- general form elements -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Register here</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form method="post" action="/user/register">
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="exampleInputID">UserName</label>
+                  <input type="text" class="form-control" id="username" name="username" placeholder="enter username">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputName">Password</label>
+                  <input type="password" class="form-control" id="pass" name="password" placeholder="enter password">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputSecurityQuestion">Security Question: </label>
+                  <label> What is your Code word?</label>
+                  <input type="password" class="form-control" id="SQuestion" name="securityAnswer" placeholder="Answer">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputName">Name</label>
+                  <input type="text" class="form-control" id="name" name="name">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail">Email</label>
+                  <input type="text" class="form-control" id="email" name="email">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputDOB">Contact</label>
+                  <input type="text" class="form-control" id="contact" name="contact">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputSalary">City</label>
+                  <input type="text" class="form-control" id="city" name="city">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputDOB">Department</label>
+                  <select id="department" name="department">
+                    <% for(let i=0;i<dep.length;i++){%>
+                      <option value="<%=dep[i].name%>">
+                        <%=dep[i].name%>
+                      </option>
+                      <%}%>
+                  </select>
+                </div>
+                <div class="form-group">
+                  
+                  <button type="submit" class="btn btn-primary" name="submit">Register</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- /.card -->
+
+        <!-- general form elements -->
+
+        <div class="form-group">
+        </div>
+        </form>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  <!--/.col (right) -->
+  </div>
+  <!-- /.row -->
+  </div><!-- /.container-fluid -->
+  <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <%- include("../partials/footer.ejs") %>
+
+</body>
+
+</html>
