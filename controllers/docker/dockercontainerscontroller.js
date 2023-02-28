@@ -1,6 +1,5 @@
-const { exec } = require("child_process");
 const alert = require('alert');
-const logs = require('../../models/logs');
+const commandExec = require('./commandcontroller');
 
 
 
@@ -37,32 +36,7 @@ const contlist = (req, res) => {
       else {
         cmd = 'sudo docker --help';
       }
-      function shCommand(cmd) {
-        exec(cmd, (error, stdout, stderr) => {
-          if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-          }
-          if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-          }
-          async function putlog() {
-            const logData = new logs({
-              "username": req.session.user,
-              "command": cmd,
-            });
-            await logData.save();
-            var out = { "cmd": cmd, "op": `${stdout}` }
-            var out1 = JSON.stringify(out);
-            res.writeHead(200, { "Content-Type": "text/plain" });
-            res.end(out1);
-          }
-          putlog();
-        });
-
-      }
-      shCommand(cmd);
+      commandExec.shCommand(cmd,req.session.user,res);
     }
 
     else {
@@ -85,33 +59,7 @@ const stopcont = (req, res) => {
     if ((access == 'ReadandRun') | (access == 'All') | (access == 'full')) {
       const name = req.body.name;
       cmd = "sudo docker stop " + name;
-      function shCommand(cmd) {
-        exec(cmd, (error, stdout, stderr) => {
-          if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-          }
-          if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-          }
-          async function putlog() {
-            const logData = new logs({
-              "username": req.session.user,
-              "command": cmd,
-            });
-            await logData.save();
-            var output = `${stdout}`.replace(/(\r\n|\n|\r)/gm, "")
-            var out = { "cmd": cmd, "op": output + " container is stopped" };
-            var out1 = JSON.stringify(out);
-            res.writeHead(200, { "Content-Type": "text/plain" });
-            res.end(out1);
-          }
-          putlog();
-        });
-
-      }
-      shCommand(cmd);
+      commandExec.shCommand(cmd,req.session.user,res);
     }
     else {
       alert('No permission to Run the command');
@@ -131,33 +79,7 @@ const startcont = (req, res) => {
     if ((access == 'ReadandRun') | (access == 'All') | (access == 'full')) {
       const name = req.body.name;
       cmd = "sudo docker start " + name;
-      function shCommand(cmd) {
-        exec(cmd, (error, stdout, stderr) => {
-          if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-          }
-          if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-          }
-          async function putlog() {
-            const logData = new logs({
-              "username": req.session.user,
-              "command": cmd,
-            });
-            await logData.save();
-            var output = `${stdout}`.replace(/(\r\n|\n|\r)/gm, "")
-            var out = { "cmd": cmd, "op": output + " container is started" };
-            var out1 = JSON.stringify(out);
-            res.writeHead(200, { "Content-Type": "text/plain" });
-            res.end(out1);
-          }
-          putlog();
-        });
-
-      }
-      shCommand(cmd);
+      commandExec.shCommand(cmd,req.session.user,res);
     }
     else {
       alert('No permission to Run the command');
@@ -251,31 +173,7 @@ const runcont = (req, res) => {
       }
 
       cmd = 'sudo docker run ' + detached + volume + port + network + contname + imagename;
-      function shCommand(cmd) {
-        exec(cmd, (error, stdout, stderr) => {
-          if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-          }
-          if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-          }
-          async function putlog() {
-            const logData = new logs({
-              "username": req.session.user,
-              "command": cmd,
-            });
-            await logData.save();
-            urlPath = req.protocol + '://' + req.get('host') + '/docker/';
-            finalOutput = "Container is launched with id " + `${stdout}`;
-            res.render('./docker/containers', { "name": req.session.user, "output": finalOutput, "cmd": cmd, "urlPath": urlPath, "homePath": homePath });
-          }
-          putlog();
-        });
-
-      }
-      shCommand(cmd);
+      commandExec.shCommandRunCont(cmd,req.session.user,req,res,urlPath,homePath);
     }
     else {
       alert('No permission to Run the command');

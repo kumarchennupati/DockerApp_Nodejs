@@ -125,34 +125,60 @@
                         </tfoot>
                       <tbody>
                         <tr>
-                          <td><button type="button" class="btn btn-primary" name="listNet" style="width: 300px;"
+                          <td><button type="button" class="btn btn-primary"  style="width: 300px;"
                               onclick="resourceDelete( '<%=urlPath%>','resourcedelete','container','stopped' );">Delete Stopped Container</button>
                           <td> <label for="exampleInputID">To Delete the Stopped Container</label></td>
                         </tr>
                         <tr>
-                          <td><button type="button" class="btn btn-primary" name="listNet" style="width: 300px;"
+                          <td><button type="button" class="btn btn-primary"  style="width: 300px;"
                               onclick="resourceDelete( '<%=urlPath%>','resourcedelete','container','running' );">Delete Running Container</button>
                           <td> <label for="exampleInputID">To Delete the Running Container</label></td>
                         </tr>
                         <tr>
-                          <td><button type="button" class="btn btn-primary" name="listNet" style="width: 300px;"
+                          <td><button type="button" class="btn btn-primary"  style="width: 300px;"
                               onclick="resourceDelete( '<%=urlPath%>','resourcedelete','image','stopped' );">Delete an unused Image</button>
                           <td> <label for="exampleInputID">To Delete a unused Image from local Repository</label></td>
                         </tr>
                         <tr>
-                          <td><button type="button" class="btn btn-primary" name="listNet" style="width: 300px;"
+                          <td><button type="button" class="btn btn-primary"  style="width: 300px;"
                               onclick="resourceDelete( '<%=urlPath%>','resourcedelete','image','running' );">Delete an Image Forcefully</button>
                           <td> <label for="exampleInputID">To Delete a used Image Forcefully from local Repository</label></td>
                         </tr>
                         <tr>
                           <tr>
-                            <td><button type="button" class="btn btn-primary" name="listNet" style="width: 300px;"
+                            <td><button type="button" class="btn btn-primary"  style="width: 300px;"
                                 onclick="resourceDelete( '<%=urlPath%>','resourcedelete','network','stopped' );">Delete an Unattached Network</button>
                             <td> <label for="exampleInputID">To Delete an Unattached Network</label></td>
                           </tr>
-                          <td><button type="button" class="btn btn-primary" name="listNet" style="width: 300px;"
+                          <td><button type="button" class="btn btn-primary" style="width: 300px;"
                               onclick="resourceDelete( '<%=urlPath%>','resourcedelete','network','running' );">Delete a Network Forcefully</button>
                           <td> <label for="exampleInputID">To Delete an Attached Network Forcefully</label></td>
+                        </tr>
+                        <tr>
+                          <tr>
+                            <td>
+                              <label style="width: 20%;">Resource Type:</label>
+
+
+                              <select id="resourcetype" name="resourcetype" style="width: 20%;">
+                                  <option value="container">Container</option>
+                                  <option value="image">Image</option>
+                                  <option value="network">Network</option>
+                                  <option value="volume">Volume</option>
+                                  <option value="all">All</option>
+                              </select> &emsp; &emsp; &emsp;
+                              <button type="button" class="btn btn-primary"  style="width: 300px;"
+                                onclick="pruneResource( '<%=urlPath%>','resourceprune');">Prune Unattached</button></td>
+                            <td> <label for="exampleInputID">To Delete all the Unattached one's of Specified Resource</label></td>
+                          </tr>
+                          <td><button type="button" class="btn btn-primary"  style="width: 300px;"
+                              onclick="allResourceDelete( '<%=urlPath%>','allresourcedelete','container' );">Delete all Containers</button>
+                          <td> <label for="exampleInputID">To Delete all the Containers Forcefully</label></td>
+                        </tr>
+                        <tr>
+                          <td><button type="button" class="btn btn-primary"  style="width: 300px;"
+                              onclick="allResourceDelete( '<%=urlPath%>','allresourcedelete','image' );">Delete all Images</button>
+                          <td> <label for="exampleInputID">To Delete all the Images Forcefully</label></td>
                         </tr>
                       </tbody>
                     </table>

@@ -1,5 +1,5 @@
 const login = require('../../models/login');
-const crypto = require("crypto");
+const cryptography = require('../encryptandhashcontroller');
 var alert = require('alert');
 
 
@@ -17,32 +17,6 @@ MongoClient.connect(url, function (err, db) {
 
 
 
-
-async function verify(password, hash) {
-    return new Promise((resolve, reject) => {
-        const [salt, key] = hash.split(":")
-        crypto.scrypt(password, salt, 256, (err, derivedKey) => {
-            if (err) reject(err);
-            resolve(key == derivedKey.toString('hex'))
-        });
-    })
-}
-
-
-async function hash(password) {
-    return new Promise((resolve, reject) => {
-        const salt = crypto.randomBytes(8).toString("hex")
-
-        crypto.scrypt(password, salt, 256, (err, derivedKey) => {
-            if (err) reject(err);
-            resolve(salt + ":" + derivedKey.toString('hex'))
-        });
-    })
-}
-
-
-
-
 const verification = (req, res) => {
     var pass = req.body.password;
 
@@ -50,7 +24,7 @@ const verification = (req, res) => {
 
         result = await login.findOne({ "username": req.body.username });
         if (result != null) {
-            var k = await verify(pass, result.password);
+            var k = await cryptography.verify(pass, result.password);
             if (k) {
                 req.session.auth = true;
                 req.session.user = req.body.username;
@@ -84,7 +58,7 @@ const loginAcc = (req, res) => {
         var count = result1.length;
         if (count == 0) {
             alert('Create an admin account first before using this app')
-            res.render('./admin/adminRegister');
+            res.redirect('/admin/register');
         }
         else {
             res.render('./users/login');
@@ -108,7 +82,7 @@ const forget = (req, res) => {
         login.findOne(forgot, async function (err, res1) {
             if (err) throw err;
             if (res1 != null) {
-                var k = await verify(secQuestion, res1.securityAnswer);
+                var k = await cryptography.verify(secQuestion, res1.securityAnswer);
                 if (k) {
                     res.render("./users/password");
                 }
@@ -132,7 +106,7 @@ const forget = (req, res) => {
 const changePass = (req, res) => {
     var password;
     async function run() {
-        password = await hash(req.body.password);
+        password = await cryptography.hash(req.body.password);
         var registerData = {
             "password": password,
         };

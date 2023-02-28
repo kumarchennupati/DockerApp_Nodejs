@@ -1,6 +1,6 @@
-const { exec } = require("child_process");
+const commandExec = require('./commandcontroller');
 const alert = require('alert');
-const logs = require('../../models/logs');
+
 
 const deletion = (req, res) => {
     if (req.session.auth == true) {
@@ -35,46 +35,88 @@ const resourcedelete = (req, res) => {
             const state = req.body.state;
             const name = req.body.name;
             const resource = req.body.resource;
-                if (state == 'stopped') {
-                    cmd = "sudo docker "+resource+" rm "+name;
-                }
-                else if (state == 'running') {
-                    cmd = "sudo docker "+resource+" rm -f "+name;
-                }
-                else {
-                    cmd = 'sudo docker --help';
-                }
-                function shCommand(cmd) {
-                    exec(cmd, (error, stdout, stderr) => {
-                        if (error) {
-                            console.log(`error: ${error.message}`);
-                            return;
-                        }
-                        if (stderr) {
-                            console.log(`stderr: ${stderr}`);
-                            return;
-                        }
-                        async function putlog() {
-                            const logData = new logs({
-                                "username": req.session.user,
-                                "command": cmd,
-                            });
-                            await logData.save();
-                            var output =  resource+" Resource is deleted with name: "+`${stdout}`;
-                            var out = { "cmd": cmd, "op": output };
-                            var out1 = JSON.stringify(out);
-                            res.writeHead(200, { "Content-Type": "text/plain" });
-                            res.end(out1);
-                        }
-                        putlog();
-                    });
-
-                }
-                shCommand(cmd);
+            if (state == 'stopped') {
+                cmd = "sudo docker " + resource + " rm " + name;
+            }
+            else if (state == 'running') {
+                cmd = "sudo docker " + resource + " rm -f " + name;
+            }
+            else {
+                cmd = 'sudo docker --help';
+            }
+            commandExec.shCommand(cmd,req.session.user,res);
         }
 
         else {
             alert('No permission to access');
+        }
+
+    }
+    else {
+        res.redirect('/login');
+        alert('Not loggedin')
+    }
+}
+
+
+
+const allresourcedelete = (req, res) => {
+    if (req.session.auth == true) {
+        var access = req.session.role;
+        if (access == 'full') {
+            const resource = req.body.resource;
+            if (resource == 'container') {
+                cmd = "sudo docker rm -f $(sudo docker ps -a -q)";
+            }
+            else if (resource == 'image') {
+                cmd = "sudo docker rmi -f $(sudo docker images -q)"
+            }
+            else {
+                cmd = 'sudo docker --help';
+            }
+            commandExec.shCommand(cmd,req.session.user,res);
+        }
+
+        else {
+            alert('No permission to Delete all');
+        }
+
+    }
+    else {
+        res.redirect('/login');
+        alert('Not loggedin')
+    }
+}
+
+
+
+
+
+
+const resourceprune = (req, res) => {
+    if (req.session.auth == true) {
+        var access = req.session.role;
+        if (access == 'full') {
+            const resource = req.body.resource;
+            var cmd;
+            if(resource == 'image'){
+                cmd = "sudo docker image prune -af";
+            }
+            else if ((resource == 'volume') | (resource == 'network') | (resource == 'container'))
+            {
+                cmd = "sudo docker "+resource+" prune -f";
+            }
+            else if(resource == 'all'){
+                cmd = " sudo docker system prune --volumes -af";
+            }
+            else{
+                cmd = "sudo docker --help";
+            }
+            commandExec.shCommand(cmd,req.session.user,res);
+        }
+
+        else {
+            alert('No permission to Prune the Resources');
         }
 
     }
@@ -91,5 +133,7 @@ const resourcedelete = (req, res) => {
 
 module.exports = {
     deletion,
-    resourcedelete
+    resourcedelete,
+    allresourcedelete,
+    resourceprune
 }

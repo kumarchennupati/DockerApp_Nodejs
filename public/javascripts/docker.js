@@ -3,7 +3,7 @@ function containerList(path, choice, state) {
     xhr = new XMLHttpRequest();
     xhr.open('POST', path + choice, 'true');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send("state="+state);
+    xhr.send("state=" + state);
     xhr.onload = function () {
         const output1 = xhr.responseText;
         var output = JSON.parse(output1);
@@ -20,7 +20,7 @@ function stopContainer(path, choice) {
         xhr = new XMLHttpRequest();
         xhr.open('POST', path + choice, 'true');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send("name="+contName);
+        xhr.send("name=" + contName);
         xhr.onload = function () {
             const output1 = xhr.responseText;
             var output = JSON.parse(output1);
@@ -38,7 +38,7 @@ function startContainer(path, choice) {
         xhr = new XMLHttpRequest();
         xhr.open('POST', path + choice, 'true');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send("name="+contName);
+        xhr.send("name=" + contName);
         xhr.onload = function () {
             const output1 = xhr.responseText;
             var output = JSON.parse(output1);
@@ -73,7 +73,7 @@ function pullImage(path, choice) {
         xhr = new XMLHttpRequest();
         xhr.open('POST', path + choice, 'true');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send("name="+imgName);
+        xhr.send("name=" + imgName);
         xhr.onload = function () {
             const output1 = xhr.responseText;
             var output = JSON.parse(output1);
@@ -90,9 +90,8 @@ function createImage(path, choice) {
     var tag = document.getElementById('tag').value;
     xhr = new XMLHttpRequest();
     xhr.open('POST', path + choice, 'true');
-    xhr.send();
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send("contname="+contName+"&name="+imgName+"&tag="+tag);
+    xhr.send("contname=" + contName + "&name=" + imgName + "&tag=" + tag);
     xhr.onload = function () {
         const output1 = xhr.responseText;
         var output = JSON.parse(output1);
@@ -129,7 +128,7 @@ function createNetwork(path, choice) {
     xhr = new XMLHttpRequest();
     xhr.open('POST', path + choice, 'true');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send("name="+netName+"&driver="+driver+"&subnet="+subnet+"&gateway="+gateway);
+    xhr.send("name=" + netName + "&driver=" + driver + "&subnet=" + subnet + "&gateway=" + gateway);
     xhr.onload = function () {
         const output1 = xhr.responseText;
         var output = JSON.parse(output1);
@@ -152,7 +151,7 @@ function connectNetwork(path, choice) {
     xhr = new XMLHttpRequest();
     xhr.open('POST', path + choice, 'true');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send("name="+networkName+"&contname="+contName+"&specificip="+specificip);
+    xhr.send("name=" + networkName + "&contname=" + contName + "&specificip=" + specificip);
     xhr.onload = function () {
         const output1 = xhr.responseText;
         var output = JSON.parse(output1);
@@ -173,7 +172,7 @@ function detachNetwork(path, choice) {
     xhr = new XMLHttpRequest();
     xhr.open('POST', path + choice, 'true');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send("name="+networkName+"&contname="+contName);
+    xhr.send("name=" + networkName + "&contname=" + contName);
     xhr.onload = function () {
         const output1 = xhr.responseText;
         var output = JSON.parse(output1);
@@ -188,18 +187,55 @@ function detachNetwork(path, choice) {
 
 
 
-function resourceDelete(path, choice,resource, state) {
+function resourceDelete(path, choice, resource, state) {
     var contName = prompt("Enter the Resource Full_Name with tag / ID to be deleted");
-    xhr = new XMLHttpRequest();
-    xhr.open('POST', path + choice, 'true');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send("state="+state+"&resource="+resource+"&name="+contName);
-    xhr.onload = function () {
-        const output1 = xhr.responseText;
-        var output = JSON.parse(output1);
-        document.getElementById("txtBox").innerHTML = output.cmd;
-        document.getElementById("injected").innerHTML = output.op;
+    if (contName != null) {
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', path + choice, 'true');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send("state=" + state + "&resource=" + resource + "&name=" + contName);
+        xhr.onload = function () {
+            const output1 = xhr.responseText;
+            var output = JSON.parse(output1);
+            document.getElementById("txtBox").innerHTML = output.cmd;
+            document.getElementById("injected").innerHTML = output.op;
+        }
     }
+}
 
+
+function allResourceDelete(path, choice, resource) {
+    decision = confirm("Are you sure, you want to 'delete' all the " + resource + "s");
+    if (decision == true) {
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', path + choice, 'true');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send("resource=" + resource);
+        xhr.onload = function () {
+            const output1 = xhr.responseText;
+            var output = JSON.parse(output1);
+            document.getElementById("txtBox").innerHTML = output.cmd;
+            document.getElementById("injected").innerHTML = output.op;
+        }
+    }
+}
+
+
+
+function pruneResource(path, choice) {
+    var resource = document.getElementById("resourcetype").value;
+    decision = confirm("Are you sure, you want to 'prune' all the unattached " + resource + "s");
+    if (decision == true) {
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', path + choice, 'true');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send("resource=" + resource);
+        xhr.onload = function () {
+            const output1 = xhr.responseText;
+            var output = JSON.parse(output1);
+            document.getElementById("txtBox").innerHTML = output.cmd;
+            document.getElementById("injected").innerHTML = output.op;
+        }
+    }
 }
 

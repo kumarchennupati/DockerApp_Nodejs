@@ -72,7 +72,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/admin/logs" class="nav-link">
+                        <a href="/admin/logs?specifiedUser=&submit=" class="nav-link">
                             <i class="nav-icon fas fa-cxtachometer-alt"></i>
                             <p>
                                 Logs
@@ -216,12 +216,16 @@
                                                                 href="/control/edit/<%=data[i].username%>"
                                                                 style="color: azure;">Edit</a></button> &nbsp; &nbsp; -->
                                                             <div class="form-group">
-                                                                <button type="submit" name="submit"
-                                                                    style="color: red;">approve</button>
+                                                                <button type="submit" name="submit" class="btn btn-primary">Approve</button> &emsp; 
+                                                                    <button type="button" class="btn btn-primary" name="reject"><a
+                                                                        href="/control/reject/<%=data[i].username%>" style="color: azure;">Reject</a></button>
                                                             </div>
 
+                                                        </td>
+                                                    </form>
+
                                                 </tr>
-                                                </form>
+
                                                 <%}%>
                                         </tbody>
                                         <tfoot>
@@ -242,7 +246,6 @@
                                     </table>
                                     <br>
                                     <br>
-                                    <a href="/admin/deleteddata">Trash Data</a>
                                     </form>
                                 </div>
                             </div>

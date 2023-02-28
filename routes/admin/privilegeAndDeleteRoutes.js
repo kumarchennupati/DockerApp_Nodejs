@@ -10,5 +10,6 @@ router.get('/delete/:usr', privilegeAndDelete.deleteEmp);
 router.get('/restore/:usr', privilegeAndDelete.restore);
 router.get('/permdelete/:usr', privilegeAndDelete.permDelete);
 router.post('/approve/:usr', privilegeAndDelete.approve);
+router.get('/reject/:usr', privilegeAndDelete.reject);
 
 module.exports = router;

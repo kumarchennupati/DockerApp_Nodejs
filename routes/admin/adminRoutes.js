@@ -1,12 +1,13 @@
 const express = require('express');
 const adminController = require('../../controllers/admin/admincontroller');
+const adminValidator = require('../../validators/adminregistervalidator');
 
 const router = express.Router();
 
 
 router.get('/', adminController.adminLogin);
 router.get('/register', adminController.register);
-router.post('/register', adminController.adminSignUp);
+router.post('/register',adminValidator.add, adminController.adminSignUp);
 router.post('/verify', adminController.verification);
 router.get('/emptable', adminController.displayDetails);
 router.get('/logout', adminController.logout);

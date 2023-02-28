@@ -1,78 +1,26 @@
 var alert = require('alert');
-
 const usrDetails = require('../../models/user');
-const crypto = require("crypto");
 const login = require('../../models/login');
 const deletedUsrDetails = require('../../models/userDelete');
 const deletedLogin = require('../../models/loginDelete');
 const approvalLogin = require('../../models/loginApproval');
 const approvalUser = require('../../models/userApproval');
+const otpDB = require('../../models/otp');
 const logs = require('../../models/logs');
-
-
-const algorithm = 'aes-256-cbc'; //Using AES encryption
-const key = "6fa979f20126cb08aa645a8f495f6d85";
-const iv = crypto.randomBytes(16);
-
-
+const otpGenerator = require('otp-generator')
+const mail = require('./mailer');
+const cryptography = require('../encryptandhashcontroller');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 var dbCon;
 
 
 
-
-
-
 MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    // console.log("Database created!");
     dbCon = db.db("mydatabase");
-    // db.close();
 });
 
-
-
-async function verify(password, hash) {
-    return new Promise((resolve, reject) => {
-        const [salt, key] = hash.split(":")
-        crypto.scrypt(password, salt, 256, (err, derivedKey) => {
-            if (err) reject(err);
-            resolve(key == derivedKey.toString('hex'))
-        });
-    })
-}
-
-
-async function hash(password) {
-    return new Promise((resolve, reject) => {
-        const salt = crypto.randomBytes(8).toString("hex")
-
-        crypto.scrypt(password, salt, 256, (err, derivedKey) => {
-            if (err) reject(err);
-            resolve(salt + ":" + derivedKey.toString('hex'))
-        });
-    })
-}
-
-
-
-function encrypt(text) {
-    let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-    let encrypted = cipher.update(text);
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
-}
-
-
-function decrypt(text) {
-    let iv = Buffer.from(text.iv, 'hex');
-    let encryptedText = Buffer.from(text.encryptedData, 'hex');
-    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
-    let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-    return decrypted.toString();
-}
 
 
 
@@ -83,21 +31,26 @@ const adminLogin = (req, res) => {
         var count = result1.length;
         if (count == 0) {
             alert('Create an admin account first before using this app')
-            res.render('./admin/adminRegister');
+            res.redirect('/admin/register');
         }
         else {
             res.render('./admin/adminLogin');
-            
+
         }
     });
 }
 
 
 const register = (req, res) => {
-    dbCon.collection("admin").find({}).toArray(function (err, result1) {
+    dbCon.collection("admin").find({}).toArray(async function (err, result1) {
         if (err) throw err;
         var count = result1.length;
         if (count == 0) {
+            var otpData = otpGenerator.generate(8);
+            const otp = new otpDB({ "otp": otpData });
+            mail.mail1(otpData);
+            await otp.save();
+            console.log(otpData);
             res.render('./admin/adminRegister');
         }
         else {
@@ -113,31 +66,35 @@ const register = (req, res) => {
 
 const adminSignUp = (req, res) => {
     async function run() {
-        password = await hash(req.body.password);
-        secquestion = await hash(req.body.securityAnswer);
+        password = await cryptography.hash(req.body.password);
+        secquestion = await cryptography.hash(req.body.securityAnswer);
+        var otpdata = await otpDB.findOne({});
+        if (req.body.otp == otpdata.otp) {
+            var registerData = {
+                "username": cryptography.encrypt(req.body.username),
+                "password": password,
+                "securityAnswer": secquestion,
+                "email": cryptography.encrypt(req.body.email)
+            };
 
-        var registerData = {
-            "username": encrypt(req.body.username),
-            "password": password,
-            "securityAnswer": secquestion,
-            "email": encrypt(req.body.email)
-        };
-
-        dbCon.collection("admin").find({}).toArray(function (err, res1) {
-            if (err) throw err;
-            var count = res1.length;
-            if (count == 0) {
-                async function insertData() {
-                    var adminInfo = await dbCon.collection("admin").insertOne(registerData);
-                    res.redirect('/');
+            dbCon.collection("admin").find({}).toArray(function (err, res1) {
+                if (err) throw err;
+                var count = res1.length;
+                if (count == 0) {
+                    async function insertData() {
+                        var adminInfo = await dbCon.collection("admin").insertOne(registerData);
+                        res.redirect('/');
+                    }
+                    insertData();
                 }
-                insertData();
-            }
-            else {
-                res.redirect('/admin');
-            }
-        });
-
+                else {
+                    res.redirect('/admin');
+                }
+            });
+        }
+        else {
+            alert('OTP does not match');
+        }
     }
     run()
 
@@ -149,8 +106,8 @@ const verification = (req, res) => {
     var user;
     dbCon.collection("admin").findOne({}, async function (err, res1) {
         if (res1 != null) {
-            user = decrypt(res1.username);
-            k = await verify(pass, res1.password);
+            user = cryptography.decrypt(res1.username);
+            k = await cryptography.verify(pass, res1.password);
             if (k && (user == req.body.username)) {
                 req.session.auth = true;
                 req.session.user = user;
@@ -176,13 +133,13 @@ const displayDetails = (req, res) => {
     var allDetails;
     dbCon.collection("admin").findOne({}, function (err, res1) {
         if (res1 != null) {
-            user = decrypt(res1.username);
+            user = cryptography.decrypt(res1.username);
             if (req.session.auth == true && req.session.user == user) {
-                async function data(){
-                result =  usrDetails.find().sort({ username: -1 });
-                result1 = login.find().sort({ username: -1 });
-                allDetails = [await result, await result1];
-                res.render('./admin/adminEmpTable', { "data": allDetails[0], "name": user, "req": req, "log":allDetails[1] });
+                async function data() {
+                    result = usrDetails.find().sort({ username: -1 });
+                    result1 = login.find().sort({ username: -1 });
+                    allDetails = [await result, await result1];
+                    res.render('./admin/adminEmpTable', { "data": allDetails[0], "name": user, "req": req, "log": allDetails[1] });
                 }
                 data();
             }
@@ -203,14 +160,14 @@ const approvalDetails = (req, res) => {
     var allDetails;
     dbCon.collection("admin").findOne({}, function (err, res1) {
         if (res1 != null) {
-            user = decrypt(res1.username);
+            user = cryptography.decrypt(res1.username);
             if (req.session.auth == true && req.session.user == user) {
-                async function data(){
-                var result =  approvalUser.find().sort({ username: -1 });
-                var result1 = approvalLogin.find().sort({ username: -1 });
-                var role1 = dbCon.collection("role").find({}).toArray();
-                allDetails = [await result, await result1, await role1];
-                res.render('./admin/approvalEmpTable', { "data": allDetails[0], "name": user, "req": req, "log":allDetails[1], "role1": allDetails[2]});
+                async function data() {
+                    var result = approvalUser.find().sort({ username: -1 });
+                    var result1 = approvalLogin.find().sort({ username: -1 });
+                    var role1 = dbCon.collection("role").find({}).toArray();
+                    allDetails = [await result, await result1, await role1];
+                    res.render('./admin/approvalEmpTable', { "data": allDetails[0], "name": user, "req": req, "log": allDetails[1], "role1": allDetails[2] });
                 }
                 data();
             }
@@ -233,13 +190,13 @@ const trashDisplay = (req, res) => {
     var allDetails;
     dbCon.collection("admin").findOne({}, function (err, res1) {
         if (res1 != null) {
-            user = decrypt(res1.username);
+            user = cryptography.decrypt(res1.username);
             if (req.session.auth == true && req.session.user == user) {
-                async function data(){
-                result =  deletedUsrDetails.find().sort({ username: -1 });
-                result1 = deletedLogin.find().sort({ username: -1 });
-                allDetails = [await result, await result1];
-                res.render('./admin/adminDeleted', { "data": allDetails[0], "name": user, "req": req, "log":allDetails[1] });
+                async function data() {
+                    result = deletedUsrDetails.find().sort({ username: -1 });
+                    result1 = deletedLogin.find().sort({ username: -1 });
+                    allDetails = [await result, await result1];
+                    res.render('./admin/adminDeleted', { "data": allDetails[0], "name": user, "req": req, "log": allDetails[1] });
                 }
                 data();
             }
@@ -277,9 +234,9 @@ const forget = (req, res) => {
     dbCon.collection("admin").findOne({}, function (err, res1) {
         if (err) throw err;
         if (res1 != null) {
-            user = decrypt(res1.username);
+            user = cryptography.decrypt(res1.username);
             async function run() {
-                var k = await verify(secQuestion, res1.securityAnswer);
+                var k = await cryptography.verify(secQuestion, res1.securityAnswer);
                 if (k && (req.body.username == user)) {
                     res.render("./admin/adminPassword");
                 }
@@ -303,7 +260,7 @@ const forget = (req, res) => {
 const changePass = (req, res) => {
     var password;
     async function run() {
-        password = await hash(req.body.password);
+        password = await cryptography.hash(req.body.password);
         var registerData = {
             "password": password,
         };
@@ -329,11 +286,17 @@ const logDetails = (req, res) => {
     var user;
     dbCon.collection("admin").findOne({}, function (err, res1) {
         if (res1 != null) {
-            user = decrypt(res1.username);
+            user = cryptography.decrypt(res1.username);
             if (req.session.auth == true && req.session.user == user) {
-                async function data(){
-                result =  await logs.find().sort({ createdAt: 1 });
-                res.render('./admin/adminLogs', { "data": result, "name": user});
+                async function data() {
+                    if (req.query.specifiedUser == undefined) {
+                        result = await logs.find().sort({ createdAt: 1 });
+                        res.render('./admin/adminLogs', { "data": result, "name": user });
+                    }
+                    else {
+                        result = await logs.find({"username": req.query.specifiedUser}).sort({ createdAt: 1 });
+                        res.render('./admin/adminLogs', { "data": result, "name": user });
+                    }
                 }
                 data();
             }

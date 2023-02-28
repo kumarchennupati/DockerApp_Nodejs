@@ -4,6 +4,7 @@ const dockerMainpageController = require('../../controllers/docker/dockermainpag
 const dockerImageController = require('../../controllers/docker/dockerimagescontroller');
 const dockerNetworkController = require('../../controllers/docker/dockernetworkcontroller');
 const dockerDeleteController = require('../../controllers/docker/dockerdeletecontroller');
+const dockerFileController = require('../../controllers/docker/dockerfilecontroller');
 
 
 const router = express.Router();
@@ -36,6 +37,11 @@ router.post('/netdetach', dockerNetworkController.netdetach);
 
 router.get('/deletion', dockerDeleteController.deletion);
 router.post('/resourcedelete', dockerDeleteController.resourcedelete);
+router.post('/allresourcedelete', dockerDeleteController.allresourcedelete);
+router.post('/resourceprune', dockerDeleteController.resourceprune);
+
+
+router.get('/dockerfile', dockerFileController.dockerfile);
 
 
 module.exports = router;

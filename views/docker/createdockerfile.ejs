@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Docker Management</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/stylesheets/adminlte.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <div class="sidebar">
+                <div class="info">
+                    <h5 style="color: aliceblue; text-align: center;">
+                        <%=name%>
+                    </h5>
+                </div>
+            </div>
+
+
+
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="false">
+                    <li class="nav-item">
+                        <a href="<%=homePath%>" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Docker
+                                <span class="right badge badge-danger">New</span>
+                            </p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/docker/container" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Container
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/docker/image" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Image
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/docker/network" class="nav-link">
+                            <i class="nav-icon fas fa-cxtachometer-alt"></i>
+                            <p>
+                                Network
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/docker/deletion" class="nav-link">
+                            <i class="nav-icon fas fa-cxtachometer-alt"></i>
+                            <p>
+                                Delete Resource
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-open">
+                        <a href="/docker/dockerfile" class="nav-link active">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                DockerFile
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="<%=homePath%>">DockerMainPage</a></li>
+                                <li class="breadcrumb-item active"><a href="/logout">LogOut</a></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
+
+            <!-- Main content -->
+            <div class="container-fluid" style="padding-left: 25%; padding-right: 10%;">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-10">
+                        <!-- general form elements -->
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Container Details</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+
+                            <form method="post" action="/docker/runcont">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="exampleInputName">Base Image Name</label>
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter the base image name" required onkeyup="image();">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" id="cmd" name="cmd" placeholder="Enter the Command" style="width: 70%;" > &emsp;
+                                            <button type="button" class="btn btn-primary" name="register" onclick="run();">Add Command to Run</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" id="srccpy" name="srccpy" placeholder="Enter the File Full Local Path" style="width: 35%;" >
+                                        <input type="text" id="descpy" name="descpy" placeholder="Enter the File Destination Path" style="width: 35%;" > &emsp;
+                                            <button type="button" class="btn btn-primary" name="register" onclick="copy();">Add Command to Run</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" id="port" name="port" placeholder="Enter the Port" style="width: 70%;" > &emsp;
+                                            <button type="button" class="btn btn-primary" name="register" onclick="expose();">Expose Port</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" id="env" name="env" placeholder="Enter the Environmental Value" style="width: 70%;" > &emsp;
+                                            <button type="button" class="btn btn-primary" name="register" onclick="variable();">Set Environmental Variable</button>
+                                    </div>
+                                    <center>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary" name="submit">Launch</button>
+                                        </div>
+                                    </center>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="20" cols="100" name="dockerfile" id="dockerfile"></textarea>
+                        </div>
+                        <!-- /.card -->
+
+                        <!-- general form elements -->
+
+                        <div class="form-group">
+                        </div>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.content-wrapper -->
+    <%- include("../partials/footer.ejs") %>
+
+
+        <script>
+            function image() {
+                k = document.getElementById("name").value;
+                txt = document.getElementById("dockerfile").value;
+                if (txt.search(/from/i) == -1){
+                live_cmd = "FROM    " + k+'\n'+txt;
+                }
+                else{
+                    m='FROM '+k;
+                    live_cmd = txt.replace(/from.*/i, m)
+                }
+                document.getElementById("dockerfile").innerHTML = live_cmd;
+            }
+            function run() {
+                k = document.getElementById("cmd").value;
+                txt = document.getElementById("dockerfile").value;
+                live_cmd = txt+"RUN    " + k+'\n';
+                document.getElementById("dockerfile").innerHTML = live_cmd;
+                document.getElementById("cmd").value='';
+            }
+            function copy() {
+                k = document.getElementById("srccpy").value;
+                k1 = document.getElementById("descpy").value;
+                txt = document.getElementById("dockerfile").value;
+                live_cmd = txt+"COPY    " + k+'    '+k1+'\n';
+                document.getElementById("dockerfile").innerHTML = live_cmd;
+                document.getElementById("srccpy").value='';
+                document.getElementById("descpy").value='';
+            }
+            function expose() {
+                k = document.getElementById("port").value;
+                txt = document.getElementById("dockerfile").value;
+                live_cmd = txt+"Expose    " + k+'\n';
+                document.getElementById("dockerfile").innerHTML = live_cmd;
+                document.getElementById("port").value='';
+            }
+            function variable() {
+                k = document.getElementById("env").value;
+                txt = document.getElementById("dockerfile").value;
+                live_cmd = txt+"ENV    " + k+'\n';
+                document.getElementById("dockerfile").innerHTML = live_cmd;
+                document.getElementById("env").value='';
+            }
+        </script>
+
+
+</body>
+
+</html>

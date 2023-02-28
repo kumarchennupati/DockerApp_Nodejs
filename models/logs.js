@@ -11,6 +11,10 @@ const logDetails = new Schema({
     type: String,
     required: true
   },
+  status:{
+    type: String,
+    required: true
+  }
 
 }, { timestamps: true });
 
@@ -18,7 +22,7 @@ const logDetails = new Schema({
 
 
 logDetails.plugin(mongooseFieldEncryption, { 
-  fields: [ "username","command"], 
+  fields: ["command","status"], 
   secret: "mypassword",
   saltGenerator: function (secret) {
     return "1234567890123456"; 

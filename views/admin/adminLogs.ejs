@@ -71,7 +71,7 @@
                             </p>
                         </a>
                     </li>
-                    <a href="/admin/logs" class="nav-link active">
+                    <a href="/admin/logs?specifiedUser=&submit=" class="nav-link active">
                         <i class="nav-icon fas fa-table"></i>
                         <p>
                             Logs
@@ -123,6 +123,13 @@
                                 <div class="card-header">
                                     <h3 class="card-title">Log Table</h3>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <form action="/admin/logs" method="get">
+                                        <input type="text"  id="specifiedUser" name="specifiedUser" placeholder="Enter user to get user specific logs" style="width: 400px;">&emsp;
+                                        <button type="submit" name="submit" class="btn btn-primary">Search</button> 
+                                        <button type="button" class="btn btn-primary" name="register" style="margin-left: 48%;"><a
+                                            href="/admin/logs" style="color: azure;">All Logs</a></button> 
+                                    </form>
+
 
                                 </div>
 
@@ -146,6 +153,11 @@
                                                     aria-label="Engine version: activate to sort column ascending"
                                                     name="dep">Time
                                                 </th>
+                                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1"
+                                                colspan="1"
+                                                aria-label="Engine version: activate to sort column ascending"
+                                                name="dep">Status
+                                            </th>
                                             </tr>
                                             </tfoot>
                                         <tbody>
@@ -160,6 +172,9 @@
                                                     <td>
                                                         <%=data[i].createdAt%>
                                                     </td>
+                                                    <td>
+                                                        <%=data[i].status%>
+                                                    </td>
                                                 <%}%>
                                         </tbody>
                                         <tfoot>
@@ -167,6 +182,7 @@
                                                 <th>User Name</th>
                                                 <th>Command</th>
                                                 <th>Time</th>
+                                                <th>Status</th>
                                             </tr>
                                         </tfoot>
                                     </table>

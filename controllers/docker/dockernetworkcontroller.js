@@ -1,6 +1,5 @@
-const { exec } = require("child_process");
+const commandExec = require('./commandcontroller');
 const alert = require('alert');
-const logs = require('../../models/logs');
 
 
 
@@ -26,32 +25,7 @@ const netlist = (req, res) => {
     if (req.session.auth == true) {
         if (req.session.role != 'None') {
             cmd = "sudo docker network ls";
-            function shCommand(cmd) {
-                exec(cmd, (error, stdout, stderr) => {
-                    if (error) {
-                        console.log(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        console.log(`stderr: ${stderr}`);
-                        return;
-                    }
-                    async function putlog() {
-                        const logData = new logs({
-                            "username": req.session.user,
-                            "command": cmd,
-                        });
-                        await logData.save();
-                        var out = { "cmd": cmd, "op": `${stdout}` }
-                        var out1 = JSON.stringify(out);
-                        res.writeHead(200, { "Content-Type": "text/plain" });
-                        res.end(out1);
-                    }
-                    putlog();
-                });
-
-            }
-            shCommand(cmd);
+            commandExec.shCommand(cmd,req.session.user,res);
         }
 
         else {
@@ -81,33 +55,7 @@ const netcreate = (req, res) => {
                 cmd = cmd + '--gateway=' + gateway + ' ';
             }
             cmd = cmd + name;
-            function shCommand(cmd) {
-                exec(cmd, (error, stdout, stderr) => {
-                    if (error) {
-                        console.log(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        console.log(`stderr: ${stderr}`);
-                        return;
-                    }
-                    async function putlog() {
-                        const logData = new logs({
-                            "username": req.session.user,
-                            "command": cmd,
-                        });
-                        await logData.save();
-                        var output = "New Network created with name: " + name + ' and ID: ' + `${stdout}`;
-                        var out = { "cmd": cmd, "op": output };
-                        var out1 = JSON.stringify(out);
-                        res.writeHead(200, { "Content-Type": "text/plain" });
-                        res.end(out1);
-                    }
-                    putlog();
-                });
-
-            }
-            shCommand(cmd);
+            commandExec.shCommand(cmd,req.session.user,res);
         }
         else {
             alert('No permission to Run the command');
@@ -131,33 +79,7 @@ const netconnect = (req, res) => {
                 cmd = cmd + "--ip " + specificip + " ";
             }
             cmd = cmd + name + " " + contname;
-            function shCommand(cmd) {
-                exec(cmd, (error, stdout, stderr) => {
-                    if (error) {
-                        console.log(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        console.log(`stderr: ${stderr}`);
-                        return;
-                    }
-                    async function putlog() {
-                        const logData = new logs({
-                            "username": req.session.user,
-                            "command": cmd,
-                        });
-                        await logData.save();
-                        var output = "Container named " + contname + " is connect to a network named " + name;
-                        var out = { "cmd": cmd, "op": output };
-                        var out1 = JSON.stringify(out);
-                        res.writeHead(200, { "Content-Type": "text/plain" });
-                        res.end(out1);
-                    }
-                    putlog();
-                });
-
-            }
-            shCommand(cmd);
+            commandExec.shCommand(cmd,req.session.user,res);
         }
         else {
             alert('No permission to Run the command');
@@ -176,33 +98,7 @@ const netdetach = (req, res) => {
             const name = req.body.name;
             const contname = req.body.contname;
             cmd = "sudo docker network disconnect "+name+" "+contname;
-            function shCommand(cmd) {
-                exec(cmd, (error, stdout, stderr) => {
-                    if (error) {
-                        console.log(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        console.log(`stderr: ${stderr}`);
-                        return;
-                    }
-                    async function putlog() {
-                        const logData = new logs({
-                            "username": req.session.user,
-                            "command": cmd,
-                        });
-                        await logData.save();
-                        var output = "Container named " +"'"+ contname +"'"+ " is detached from a network named " +"'"+ name+"'.";
-                        var out = { "cmd": cmd, "op": output };
-                        var out1 = JSON.stringify(out);
-                        res.writeHead(200, { "Content-Type": "text/plain" });
-                        res.end(out1);
-                    }
-                    putlog();
-                });
-
-            }
-            shCommand(cmd);
+            commandExec.shCommand(cmd,req.session.user,res);
         }
         else {
             alert('No permission to Run the command');

@@ -1,27 +1,10 @@
 const usrDetails = require('../../models/user');
 const login = require('../../models/login');
-const deletedLogin = require('../../models/loginDelete');
-const deletedUsrDetails = require('../../models/userDelete');
 const department = require('../../models/department');
 const approvalLogin = require('../../models/loginApproval');
 const approvalUser = require('../../models/userApproval');
-const crypto = require("crypto")
+const cryptography = require('../encryptandhashcontroller');
 var alert = require('alert');
-
-
-
-
-async function hash(password) {
-    return new Promise((resolve, reject) => {
-        const salt = crypto.randomBytes(8).toString("hex")
-
-        crypto.scrypt(password, salt, 256, (err, derivedKey) => {
-            if (err) reject(err);
-            resolve(salt + ":" + derivedKey.toString('hex'))
-        });
-    })
-}
-
 
 
 const signup = (req, res) => {
@@ -29,8 +12,8 @@ const signup = (req, res) => {
     result = await login.find({ "username": req.body.username });
     result1 = await approvalLogin.find({ "username": req.body.username });
             if (result.length == 0 && result1.length == 0) {
-                    req.body.password = await hash(req.body.password);
-                    req.body.securityAnswer = await hash(req.body.securityAnswer);
+                    req.body.password = await cryptography.hash(req.body.password);
+                    req.body.securityAnswer = await cryptography.hash(req.body.securityAnswer);
                     var empdepInfo;
                     const user = new approvalUser(req.body);
                     const loginDetails = new approvalLogin(req.body);
